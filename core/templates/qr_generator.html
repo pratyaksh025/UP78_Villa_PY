@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background: #111; color: white; } </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="bg-gray-800 p-8 rounded-lg">
+        <h1 class="text-2xl font-bold mb-4">Generate Table QR Code</h1>
+        <form method="POST" class="flex gap-4">
+            {% csrf_token %}
+            <label for="table_number" class="sr-only">Table Number</label>
+            <input type="text" name="table_number" placeholder="Enter Table Number (e.g., 1)"
+                   class="p-3 bg-gray-700 rounded-lg border border-gray-600 text-white" required>
+            <button type="submit" class="px-6 py-2 bg-cyan-600 text-white rounded-lg">
+                Generate
+            </button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Table Reservation - UP78 Villa{% endblock %}
+
+{% block content %}
+<main class="min-h-[70vh] flex items-center justify-center p-4">
+    <form method="POST" class="bg-gray-900 rounded-xl shadow-2xl w-full max-w-2xl p-6 border border-cyan-600/50">
+        {% csrf_token %} 
+        
+        <div class="flex justify-between items-start">
+            <h2 class="text-2xl font-orbitron font-bold text-white">Table Reservation</h2>
+            <a href="{% url 'index' %}" class="text-gray-400 hover:text-white text-3xl" title="Back to Home">&times;</a>
+        </div>
+        
+        {% if success_message %}
+            <div class="mt-4 p-4 bg-green-800 border border-green-600 text-green-200 rounded-lg">
+                {{ success_message }}
+            </div>
+        {% endif %}
+
+        <div class="mt-4 grid md:grid-cols-2 gap-4">
+            <input required name="name" placeholder="Full Name" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            <input required name="phone" placeholder="Phone Number" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            <input required name="date" type="date" min="{{ today }}" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            <input required name="time" type="time" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            <input required name="guests" type="number" min="1" value="2" placeholder="Guests" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            <select name="seating" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <option>Indoor</option>
+                <option>Outdoor</option>
+                <option>Private Dining</option>
+            </select>
+            <textarea name="notes" placeholder="Special requests / Occasion" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white md:col-span-2"></textarea>
+        </div>
+
+        <div class="mt-4 flex justify-end gap-3">
+            <a href="{% url 'index' %}" class="px-4 py-2 bg-gray-700 rounded-lg">Cancel</a>
+            <button type="submit" class="px-6 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg">Request Reservation</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

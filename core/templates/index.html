@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage - UP78 Villa{% endblock %}
+
+{% block content %}
+<main>
+    <div class="relative h-[72vh] flex flex-col items-center justify-center text-center overflow-hidden bg-transparent">
+        <video
+            src="/static/Videos/Cinematic_Food_Montage_A_Culinary_Journey.mp4"
+            autoPlay loop muted playsInline preload="auto"
+            class="absolute inset-0 w-full h-full object-cover z-0 opacity-30"
+        />
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
+        <div class="relative z-20 p-4 space-y-4">
+            <div class="w-full flex justify-center">
+               <svg class="w-[92vw] max-w-[1400px] h-auto" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet">
+                 <defs>
+                    <mask id="up78TextMask" x="0" y="0" width="100%" height="100%">
+                      <rect x="0" y="0" width="100%" height="100%" fill="black" />
+                      <text x="50%" y="50%" fill="white" dominant-baseline="middle" text-anchor="middle"
+                        style="font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 136px; letter-spacing: 1.5px;">
+                        UP78 VILLA
+                      </text>
+                    </mask>
+                 </defs>
+                 <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+                 <foreignObject x="0" y="0" width="100%" height="100%" mask="url(#up78TextMask)">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;">
+                      <video
+                        src="/static/Videos/Cinematic_Food_Montage_A_Culinary_Journey.mp4"
+                        autoPlay loop muted playsInline preload="auto"
+                        style="width: 100%; height: 100%; object-fit: cover; filter: saturate(1.35) contrast(1.12);"
+                      />
+                    </div>
+                 </foreignObject>
+                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="none" stroke="white" stroke-width="5"
+                    style="font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 136px; letter-spacing: 1.5px;">
+                    UP78 VILLA
+                 </text>
+               </svg>
+             </div>
+            <p class="text-xl md:text-2xl text-cyan-200 font-light font-exo2 drop-shadow-lg">
+                Authentic Indian & Chinese Cuisine. Crafted with Passion.
+            </p>
+        </div>
+    </div>
+
+    <section id="gallery" class="py-16 bg-transparent">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-center text-white mb-10 font-orbitron relative">
+          Our Ambiance & Celebrations
+        </h2>
+        <div class="flex overflow-x-auto snap-x snap-mandatory pb-4 space-x-6 scrollbar-hide">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1170&auto=format&fit=crop" class="flex-shrink-0 w-80 md:w-96 lg:w-[450px] snap-center h-64 md:h-72 object-cover rounded-xl shadow-xl border border-cyan-500/30">
+          <img src="https://images.unsplash.com/photo-1578474846059-0208ad325c3b?q=80&w=1170&auto=format&fit=crop" class="flex-shrink-0 w-80 md:w-96 lg:w-[450px] snap-center h-64 md:h-72 object-cover rounded-xl shadow-xl border border-cyan-500/30">
+          <img src="https://images.unsplash.com/photo-1590846406478-8ed68f848ce8?q=80&w=1170&auto=format&fit=crop" class="flex-shrink-0 w-80 md:w-96 lg:w-[450px] snap-center h-64 md:h-72 object-cover rounded-xl shadow-xl border border-cyan-500/30">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop" class="flex-shrink-0 w-80 md:w-96 lg:w-[450px] snap-center h-64 md:h-72 object-cover rounded-xl shadow-xl border border-cyan-500/30">
+        </div>
+      </div>
+    </section>
+    
+    <section id="menu" class="container mx-auto p-8">
+        <h2 class="text-4xl font-bold text-white font-orbitron text-center my-8">
+            Our Menu
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for item in menu_items %}
+            <div class="bg-gray-900 rounded-xl overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:scale-105 hover:shadow-cyan-500/50">
+                <img src="{{ item.imageUrl }}" alt="{{ item.name }}" class="w-full h-56 object-cover">
+                <div class="p-5">
+                    <h3 class="text-xl font-bold text-white mb-2 font-rajdhani truncate">{{ item.name }}</h3>
+                    <p class="text-gray-400 text-sm mb-4 h-10 font-exo2 line-clamp-2">{{ item.description }}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-extrabold text-cyan-400 font-orbitron">
+                            ₹{{ item.price }}
+                        </span>
+                        
+                        <form action="{% url 'add-to-cart' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            
+                            {% if table_number %}
+                                <button type="submit" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+                                    Add to Cart
+                                </button>
+                            {% else %}
+                                <button type="button" class="bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg opacity-50 cursor-not-allowed" disabled>
+                                    Add to Cart
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

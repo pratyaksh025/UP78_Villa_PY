@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Kitchen Dashboard{% endblock %}
+
+{% block content %}
+<main class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold text-white font-orbitron text-center my-6">
+        Live Kitchen Orders
+    </h1>
+    
+    {% if not active_orders %}
+        <p class="text-center text-gray-400 text-xl font-exo2 p-10">
+            No active orders.
+        </p>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for order in active_orders %}
+            <div class="bg-gray-900 rounded-xl shadow-2xl border border-gray-700 flex flex-col">
+                <div class="p-4 border-b border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold font-orbitron text-cyan-400">Table {{ order.table_number }}</span>
+                        <span class
+                            class="font-bold px-3 py-1 rounded-full text-sm
+                            {% if order.status == 'PENDING' %} bg-red-800 text-red-100 border border-red-500 {% endif %}
+                            {% if order.status == 'PREPARING' %} bg-amber-800 text-amber-100 border border-amber-500 {% endif %}
+                        ">
+                            {{ order.status }}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-1">Order #{{ order.id }} | {{ order.created_at|time:"g:i A" }}</p>
+                </div>
+                
+                <div class="p-4 flex-grow space-y-2">
+                    {% for item in order.items.all %}
+                        <div class="flex justify-between text-lg">
+                            <span class="text-gray-200">{{ item.menu_item.name }}</span>
+                            <span class="font-bold text-white">x {{ item.quantity }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="p-4 bg-gray-950/50 rounded-b-xl flex gap-2">
+                    {% if order.status == 'PENDING' %}
+                    <form action="{% url 'update-order-status' order.id %}" method="POST" class="flex-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="new_status" value="PREPARING">
+                        <button type="submit" class="w-full text-center px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg font-semibold">
+                            Mark as Preparing
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    {% if order.status == 'PREPARING' %}
+                    <form action="{% url 'update-order-status' order.id %}" method="POST" class="flex-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="new_status" value="READY">
+                        <button type="submit" class="w-full text-center px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold">
+                            Mark as Ready
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</main>
+
+<script>
+    // This function will reload the page every 20 seconds
+    setTimeout(() => {
+        window.location.reload();
+    }, 10000); // 20,000 milliseconds = 20 seconds
+</script>
+{% endblock %}

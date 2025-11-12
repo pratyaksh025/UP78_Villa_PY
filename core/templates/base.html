@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}UP78 Villa{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                        'exo2': ['"Exo 2"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #000; color: white; overflow-x: hidden; }
+        .stars {
+          width: 100%; height: 100%; position: fixed; z-index: -10;
+          background-image:
+            radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.9), rgba(255,255,255,0.0)),
+            radial-gradient(1.5px 1.5px at 20% 70%, rgba(255,255,255,0.85), rgba(255,255,255,0.0)),
+            radial-gradient(1px 1px at 40% 30%, rgba(255,255,255,0.75), rgba(255,255,255,0.0)),
+            radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.7), rgba(255,255,255,0.0)),
+            radial-gradient(1.2px 1.2px at 60% 80%, rgba(255,255,255,0.6), rgba(255,255,255,0.0));
+          background-size: 100% 100%; opacity: 0.6; filter: blur(0.4px);
+        }
+        .twinkle {
+          position: fixed; z-index: -10; inset: 0;
+          background:
+            radial-gradient(2px 2px at 15% 25%, rgba(255,255,255,0.03), transparent),
+            radial-gradient(2px 2px at 30% 45%, rgba(255,255,255,0.03), transparent),
+            radial-gradient(2px 2px at 75% 20%, rgba(255,255,255,0.04), transparent),
+            radial-gradient(2px 2px at 55% 75%, rgba(255,255,255,0.03), transparent);
+          mix-blend-mode: screen; animation: twinkle 3.2s ease-in-out infinite; opacity: 0.7;
+        }
+        @keyframes twinkle {
+          0% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+          100% { opacity: 0.6; transform: scale(1); }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .animate-light-sweep { background-size: 200% auto; animation: sweep 6s linear infinite; }
+        @keyframes sweep { from { background-position:-200% 0; } to { background-position:200% 0; } }
+    </style>
+</head>
+<body class="font-exo2">
+
+    <div aria-hidden="true" class="fixed inset-0">
+        <div class="stars"></div>
+        <div class="twinkle"></div>
+    </div>
+    
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/50 border-b border-white/5">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button id="hamburger-btn" aria-label="Open menu" class="md:hidden text-gray-300 hover:text-cyan-400">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <nav class="hidden md:flex items-center gap-3">
+                    <a href="{% url 'index' %}" class="text-gray-300 hover:text-cyan-400 font-medium font-rajdhani text-lg">Menu</a>
+                    <a href="{% url 'reservation' %}" class="text-gray-300 hover:text-cyan-400 font-medium font-rajdhani text-lg">Reservation</a>
+                    <a href="{% url 'hall-booking' %}" class="text-gray-300 hover:text-cyan-400 font-medium font-rajdhani text-lg">Hall Booking</a>
+                    <a href="{% url 'feedback' %}" class="text-gray-300 hover:text-cyan-400 font-medium font-rajdhani text-lg">Feedback</a>
+                </nav>
+                </div>
+
+            <div class="flex-1 flex items-center justify-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full overflow-hidden ring-4 ring-cyan-500/30">
+                        <video
+                            src="https://assets.mixkit.co/videos/preview/mixkit-juicy-burger-4039-large.mp4"
+                            autoPlay loop muted playsInline class="w-full h-full object-cover"
+                        />
+                    </div>
+                    <h1 class="font-extrabold tracking-wider font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-cyan-300 animate-light-sweep text-right"
+                        style="font-size: clamp(18px, 3.8vw, 28px)">
+                       UP78 VILLA
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="{% url 'cart' %}" class="relative text-gray-300 hover:text-cyan-400 font-medium font-rajdhani text-lg">
+                    Cart
+                    {% if cart_item_count > 0 %}
+                    <span class="absolute -top-2 -right-3 w-5 h-5 bg-cyan-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                       {{ cart_item_count }}
+                    </span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+        
+        {% if table_number %}
+            <p class="text-center text-green-300 font-semibold py-2 bg-black/20">Ordering for Table: {{ table_number }}</p>
+        {% else %}
+             <p class="text-center text-red-400 font-semibold py-2 bg-black/20">Please scan a table QR to enable ordering.</p>
+        {% endif %}
+
+        <div id="mobile-menu" class="hidden md:hidden bg-black/80 border-t border-gray-800 backdrop-blur-sm p-4">
+            <div class="flex flex-col gap-3">
+              <a href="{% url 'index' %}" class="mobile-menu-link text-left text-gray-200 py-2 font-rajdhani">Menu</a>
+              <a href="{% url 'reservation' %}" class="mobile-menu-link text-left text-gray-200 py-2 font-rajdhani">Reservation</a>
+              <a href="{% url 'hall-booking' %}" class="mobile-menu-link text-left text-gray-200 py-2 font-rajdhani">Hall Booking</a>
+              <a href="{% url 'feedback' %}" class="mobile-menu-link text-left text-gray-200 py-2 font-rajdhani">Feedback</a> </div>
+        </div>
+    </header>
+
+    <div class="relative z-10">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer class="py-10 bg-transparent text-center text-gray-400 border-t border-gray-800 font-exo2 relative z-10">
+      <p>&copy; {% now "Y" %} UP78 VILLA. All rights reserved.</p>
+      <p class="text-sm">Designed with Passion.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            hamburgerBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const mobileLinks = document.querySelectorAll('.mobile-menu-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

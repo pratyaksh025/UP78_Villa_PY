@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Feedback - UP78 Villa{% endblock %}
+
+{% block content %}
+<main class="min-h-[70vh] flex items-center justify-center p-4">
+    <form method="POST" class="bg-gray-900 rounded-xl shadow-2xl w-full max-w-lg p-6 border border-cyan-600/50">
+        {% csrf_token %} 
+        
+        <div class="flex justify-between items-start">
+            <h2 class="text-2xl font-orbitron font-bold text-white">Share Your Feedback</h2>
+            <a href="{% url 'index' %}" class="text-gray-400 hover:text-white text-3xl" title="Back to Home">&times;</a>
+        </div>
+        
+        {% if success_message %}
+            <div class="mt-4 p-4 bg-green-800 border border-green-600 text-green-200 rounded-lg">
+                {{ success_message }}
+            </div>
+        {% else %}
+            <div class="mt-4 grid grid-cols-1 gap-4">
+                <input required name="name" placeholder="Full Name" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input required name="email" type="email" placeholder="Email" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                
+                <div>
+                    <label class="text-sm text-gray-300 mb-2 block">Your Rating</label>
+                    <div class="flex space-x-2 text-3xl text-gray-600" id="star-rating">
+                        <span data-value="1" class="cursor-pointer hover:text-cyan-400">★</span>
+                        <span data-value="2" class="cursor-pointer hover:text-cyan-400">★</span>
+                        <span data-value="3" class="cursor-pointer hover:text-cyan-400">★</span>
+                        <span data-value="4" class="cursor-pointer hover:text-cyan-400">★</span>
+                        <span data-value="5" class="cursor-pointer hover:text-cyan-400 text-cyan-400">★</span>
+                    </div>
+                    <input type="hidden" name="rating" id="rating-value" value="5">
+                </div>
+                
+                <textarea name="message" placeholder="Your message... (Optional)" rows="4" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white"></textarea>
+            </div>
+
+            <div class="mt-4 flex justify-end">
+                <button type="submit" class="px-6 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg">Submit Feedback</button>
+            </div>
+        {% endif %}
+    </form>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stars = document.querySelectorAll('#star-rating span');
+        const ratingInput = document.getElementById('rating-value');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+                stars.forEach(s => {
+                    if (s.getAttribute('data-value') <= value) {
+                        s.classList.add('text-cyan-400');
+                        s.classList.remove('text-gray-600');
+                    } else {
+                        s.classList.remove('text-cyan-400');
+                        s.classList.add('text-gray-600');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Your Cart - UP78 Villa{% endblock %}
+
+{% block content %}
+<main class="min-h-[70vh] flex items-center justify-center p-4">
+    <div class="bg-gray-900 rounded-xl shadow-2xl w-full max-w-2xl flex flex-col border border-cyan-600/50">
+        <div class="flex justify-between items-center p-5 border-b border-gray-700"> ... </div>
+        
+        <div class="flex-grow overflow-y-auto p-5 space-y-4">
+            {% if not cart_items %} ... {% else %} {% for item in cart_items %} ... {% endfor %} {% endif %}
+        </div>
+        
+        {% if cart_items %}
+        <div class="p-5 border-t border-gray-700 space-y-3">
+            
+            <form action="{% url 'apply-coupon' %}" method="POST" class="flex gap-2">
+                {% csrf_token %}
+                <input name="coupon_code" placeholder="Enter coupon code" class="flex-1 p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-lg">Apply</button>
+            </form>
+
+            <div class="flex justify-between text-gray-300 font-exo2">
+                <span>Subtotal</span>
+                <span class="font-medium font-rajdhani">₹{{ subtotal }}</span>
+            </div>
+            
+            {% if discount_amount > 0 %}
+            <div class="flex justify-between text-green-300 font-exo2">
+                <span>Discount ({{ coupon.code }})</span>
+                <span class="font-medium font-rajdhani">- ₹{{ discount_amount }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="flex justify-between text-white text-xl font-bold font-orbitron">
+                <span>Total Amount</span>
+                <span>₹{{ final_total }}</span>
+            </div>
+
+            {% if table_number %}
+                <form action="{% url 'place-order' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 ...">
+                        Place Order ({{ final_total }})
+                    </button>
+                </form>
+            {% else %}
+                ...
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

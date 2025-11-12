@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Hall Booking - UP78 Villa{% endblock %}
+
+{% block content %}
+<main class="min-h-[70vh] flex items-center justify-center p-4">
+
+    <form method="POST" class="bg-gray-900 rounded-xl shadow-2xl w-full max-w-4xl p-5 md:p-6 border border-cyan-600/50">
+        {% csrf_token %}
+
+        <div class="flex items-start justify-between gap-3">
+            <div>
+                <h2 id="hall-booking-title" class="text-2xl md:text-3xl font-orbitron font-bold text-white">
+                    Hall Booking
+                </h2>
+                <p class="text-sm text-gray-400 mt-1">Secure your date & customize catering and setup</p>
+            </div>
+            <a href="{% url 'index' %}" class="text-gray-300 hover:text-white text-3xl" title="Back to Home">&times;</a>
+        </div>
+        
+        {% if success_message %}
+            <div class="mt-4 p-4 bg-green-800 border border-green-600 text-green-200 rounded-lg">
+                {{ success_message }}
+            </div>
+        {% endif %}
+
+        <div class="mt-2 p-4 bg-red-900/20 border border-red-500/20 rounded-md">
+            <p class="text-red-300 font-semibold">✨ Exclusive Booking Starts from ₹49,999</p>
+            <p class="text-sm text-red-300/80 mt-1">Premium catering available at ₹399 per plate for additional guests</p>
+        </div>
+
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label class="flex flex-col">
+                <span class="text-sm text-gray-300 mb-2">Event Name</span>
+                <input required name="eventName" placeholder="e.g. Birthday, Wedding" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            </label>
+            <label class="flex flex-col">
+                <span class="text-sm text-gray-300 mb-2">Contact Number / Email</span>
+                <input required name="contact" placeholder="Phone or Email" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            </label>
+            <label class="flex flex-col">
+                <span class="text-sm text-gray-300 mb-2">Event Date</span>
+                <input required name="date" type="date" min="{{ today }}" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            </label>
+            <label class="flex flex-col">
+                <span class="text-sm text-gray-300 mb-2">Estimated Guests</span>
+                <input required name="guests" type="number" min="1" value="50" class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+            </label>
+            <label class="md:col-span-2 flex flex-col">
+                <span class="text-sm text-gray-300 mb-2">Requirements</span>
+                <textarea name="requirements" placeholder="AV, seating layout, menu preferences, special requests..." class="p-3 bg-gray-800 rounded-lg border border-gray-700 text-white min-h-[90px]"></textarea>
+            </label>
+        </div>
+
+        <div class="mt-5 p-4 bg-gray-800 rounded-md border border-cyan-500/10">
+            <label for="coupon_code" class="text-sm text-gray-300 mb-2 block">Coupon Code (Optional)</label>
+            <div class="flex gap-2">
+                <input name="coupon_code" placeholder="Enter coupon" class="flex-1 p-3 bg-gray-700 rounded-lg border border-gray-600 text-white">
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-end gap-3">
+            <a href="{% url 'index' %}" class="w-full sm:w-auto px-4 py-2 bg-gray-700 rounded-lg text-sm hover:bg-gray-600 text-center">Cancel</a>
+            <button type="submit" class="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg font-rajdhani hover:from-cyan-500 hover:to-blue-500">
+                Request Booking
+            </button>
+        </div>
+    </form>
+
+</main>
+{% endblock %}
