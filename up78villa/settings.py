@@ -1,22 +1,17 @@
 from pathlib import Path
 import os
-import dj_database_url # <-- NEW: Import this at the top
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- NEW: Use an environment variable for your secret key ---
+# --- 1. GET YOUR SECRET KEY FROM THE SERVER ENVIRONMENT ---
+# We will set this in PythonAnywhere later.
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-local')
 
-# --- NEW: Check if we are in production on Render ---
-IS_PRODUCTION = os.environ.get('RENDER', False)
-
-if IS_PRODUCTION:
-    DEBUG = False
-    ALLOWED_HOSTS = ['*'] # Render will add your .onrender.com domain
-else:
-    DEBUG = True
-    ALLOWED_HOSTS = ['*'] # For local testing
+# --- 2. SET DEBUG AND ALLOWED HOSTS ---
+# When live, DEBUG must be False
+DEBUG = False
+ALLOWED_HOSTS = ['pratyakshhhh.pythonanywhere.com'] # Your live domain
 
 
 # Application definition
@@ -32,7 +27,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Whitenoise serves your CSS/images
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,24 +57,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'up78villa.wsgi.application'
 
 
-# --- NEW: Database Configuration (Switches automatically) ---
-if IS_PRODUCTION:
-    # Use the Render PostgreSQL database
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            ssl_require=True # Force SSL connection
-        )
+# --- 3. THIS IS THE DATABASE FIX ---
+# We are only using the simple sqlite3 database.
+DATABASES = {
+    'default': { # <-- This key MUST be lowercase 'default'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Use the local sqlite3 database for testing
-    DATABASES = {
-        'DEFAULT': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-# --- END OF DATABASE CHANGES ---
+}
 
 
 # Password validation
@@ -98,13 +83,13 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# --- 4. STATIC FILES (CSS, JS, Images) ---
+# This setup is correct for PythonAnywhere
 STATIC_URL = 'static/'
-# This tells Django where to *find* your static files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'core', 'static')
 ]
-# This is where Django will *collect* all static files for deployment
+# This tells Django to collect all static files into a folder named 'staticfiles'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
